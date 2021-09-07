@@ -1,5 +1,6 @@
 let prototypeFaces = [...document.querySelectorAll(".prototype .face")];
 let scenes = [...document.querySelectorAll(".scene")];
+let floors = [...document.querySelectorAll(".floor")];
 
 // Pick 6 random images from Unsplash.com
 let promisedImgs = [
@@ -21,6 +22,8 @@ let imgUrls;
 
 function init() {
   console.log("App is ready!");
+  document.querySelector(".prototype")
+    .classList.remove("loading");
   
   setPrototypeFaces();
   
@@ -31,7 +34,12 @@ function init() {
     if (i === rnd) {
       name += "-right"
     }
-    scene.appendChild(createCube(`${name}-${i}`, i === rnd));
+    let cube = createCube(`${name}-${i}`, i === rnd);
+    scene.appendChild(cube);
+    setTimeout(() => {
+      floors[i].classList.add("visible");
+      cube.classList.add("visible");
+    }, i * 200);
   });
 }
 
