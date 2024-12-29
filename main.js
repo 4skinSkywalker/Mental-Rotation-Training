@@ -2,26 +2,30 @@ let prototypeFaces = [...document.querySelectorAll(".prototype .face")];
 let scenes = [...document.querySelectorAll(".scene")];
 let floors = [...document.querySelectorAll(".floor")];
 
-// Pick 6 random images from Unsplash.com
-let promisedImgs = [
-  fetch("https://source.unsplash.com/576x576/?trees"),
-  fetch("https://source.unsplash.com/576x576/?mountain"),
-  fetch("https://source.unsplash.com/576x576/?city"),
-  fetch("https://source.unsplash.com/576x576/?sea"),
-  fetch("https://source.unsplash.com/576x576/?technology"),
-  fetch("https://source.unsplash.com/576x576/?mechanics")
-];
+function shuffle(array) {
+  for (const item of array) {
+    const a = Math.floor(Math.random()*array.length);
+    const b = Math.floor(Math.random()*array.length);
+    [array[a], array[b]] = [array[b], array[a]];
+  }
+}
+
+const images = Array(12).fill(0).map((_, i) => i+1)
+  .map(n => fetch(`./patterns/pattern-${n}.PNG`));
+
+let promisedImgs = images.slice(0, 6);
 
 let imgUrls;
-(async function () {
+async function init() {
+  console.log("App is ready!");
+
+  shuffle(images);
+  promisedImgs = images.slice(0, 6);
+
   let imgs = await Promise.all(promisedImgs);
   imgUrls = imgs.map(img => img.url);
   console.log(imgUrls);
-  init();
-})();
 
-function init() {
-  console.log("App is ready!");
   document.querySelector(".prototype")
     .classList.remove("loading");
   
@@ -42,6 +46,8 @@ function init() {
     }, i * 200);
   });
 }
+
+init();
 
 function setPrototypeFaces() {
   imgUrls.forEach((url, i) =>
